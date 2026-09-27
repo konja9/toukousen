@@ -123,6 +123,10 @@ export class Game {
     this.input.onAction((a) => this.onAction(a));
     window.addEventListener('resize', () => this.resize());
     window.addEventListener('mousemove', (e) => (this.mouse = [e.clientX, e.clientY]));
+    // A click also starts (and gives an embedding frame keyboard focus).
+    window.addEventListener('pointerdown', () => {
+      if (this.state === 'title' && this.revealT > 0.5) this.onAction('start');
+    });
     document.addEventListener('mouseleave', () => (this.mouse = null));
     const autoPause = () => {
       if ((this.state === 'play' || this.state === 'intro') && !this.paused) this.togglePause();

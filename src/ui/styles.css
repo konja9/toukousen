@@ -325,6 +325,40 @@ kbd {
   justify-content: space-between;
 }
 
+.title .narrow {
+  display: none;
+  margin-top: 18px;
+  font-family: var(--jp);
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+
+@media (max-width: 760px) {
+  .title .rules {
+    display: none;
+  }
+
+  .title .narrow {
+    display: block;
+  }
+
+  .title .block {
+    left: 20px;
+    right: 20px;
+  }
+
+  .title .top {
+    left: 20px;
+    right: 20px;
+  }
+
+  .title .top .eyebrow {
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+}
+
 /* pause */
 .pause {
   display: grid;

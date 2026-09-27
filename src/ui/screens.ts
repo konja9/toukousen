@@ -59,7 +59,8 @@ export class Screens {
           </h1>
           <div class="rule rv" style="--d:1.0"></div>
           <p class="tag rv" style="--d:1.1">線を読め。低く飛べ。遠くへ。<span>Read the lines. Stay low. Fly far.</span></p>
-          <div class="cta rv" style="--d:1.35"><span class="blink"><kbd>SPACE</kbd> TO FLY</span></div>
+          <div class="cta rv" style="--d:1.35"><span class="blink"><kbd>SPACE</kbd> / CLICK TO FLY</span></div>
+          <p class="narrow rv" style="--d:1.5">キーボードで操作するゲームです。PC の広い画面で遊んでください。</p>
         </div>
         <div class="rules rv" style="--d:1.5">
           <h2>HOW TO READ</h2>
