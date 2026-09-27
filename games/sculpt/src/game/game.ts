@@ -33,12 +33,11 @@ export class Game {
   private readonly markers = new Markers();
   private readonly field = new HeightField();
   /**
-   * While a stroke is in progress the cursor is picked against the terrain as it
-   * was when the stroke began. Picking the live surface would make a stationary
-   * brush creep toward the camera as the ground rises (and away as it is cut).
+   * Mouse position of the last pick. While a stroke is held with the mouse still,
+   * the brush keeps its ground position: re-picking the rising (or sinking)
+   * surface would make a stationary brush creep toward (or away from) the camera.
    */
-  private readonly strokeSurface = new HeightField();
-  private pickSurface: HeightField = this.field;
+  private pickedAt: [number, number] = [-1, -1];
   private readonly ball = new Ball();
   private readonly input: Input;
   private readonly audio = new Audio();
@@ -251,13 +250,10 @@ export class Game {
     if (this.state !== 'edit' || !this.cursor) return;
     this.field.pushUndo();
     this.strokeVersion = this.field.version;
-    this.strokeSurface.copyFrom(this.field);
-    this.pickSurface = this.strokeSurface;
   }
 
   private endStroke(): void {
     this.audio.brush(0);
-    this.pickSurface = this.field;
     if (this.strokeVersion < 0) return;
     if (this.field.version !== this.strokeVersion) this.strokes++;
     else this.field.discardUndo();
@@ -269,9 +265,12 @@ export class Game {
       this.cursor = null;
       return;
     }
+    const still = this.pickedAt[0] === this.input.mouseX && this.pickedAt[1] === this.input.mouseY;
+    if (still && this.input.pressed && this.cursor) return;
+    this.pickedAt = [this.input.mouseX, this.input.mouseY];
     const ndc = new Vector2((this.input.mouseX / this.w) * 2 - 1, -(this.input.mouseY / this.h) * 2 + 1);
     this.raycaster.setFromCamera(ndc, this.rig.camera);
-    this.cursor = pickTerrain(this.raycaster.ray, this.pickSurface);
+    this.cursor = pickTerrain(this.raycaster.ray, this.field);
   }
 
   private get brushMode(): 'raise' | 'cut' {
