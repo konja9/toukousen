@@ -17,7 +17,6 @@ export interface HudInfo {
   fast: boolean;
   reached: boolean[];
   cursor: { x: number; y: number; h: number } | null;
-  canUndo: boolean;
 }
 
 /** Canvas-2D overlay for the stage HUD. */
@@ -171,7 +170,7 @@ export class Hud {
     const cx = w / 2;
     if (info.phase === 'edit') {
       this.text('SPACE で球を放す', cx, h - 64, 12.5, { font: JP, a: 0.85 * a, align: 'center', spacing: 2 });
-      this.text(`左 盛土 · 右 切土 · ホイール 大きさ · Z 戻す${info.canUndo ? '' : ''} · R 最初から · Q/E 回転 · V 真上`, cx, h - 40, 11, { font: JP, a: 0.5 * a, align: 'center', spacing: 1 });
+      this.text(`左 盛土 · 右 切土 · ホイール 大きさ · Z 戻す · R 最初から · Q/E 回転 · V 真上`, cx, h - 40, 11, { font: JP, a: 0.5 * a, align: 'center', spacing: 1 });
     } else if (info.phase === 'roll') {
       const blink = 0.6 + 0.4 * Math.sin(time * 6);
       this.text(info.fast ? 'ROLLING  ×4' : 'ROLLING', cx, h - 64, 12.5, { a: blink * a, align: 'center', spacing: 5 });

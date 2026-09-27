@@ -28,7 +28,4 @@ function polyDist(x: number, z: number, pts: ReadonlyArray<readonly [number, num
 export const ridge = (pts: ReadonlyArray<readonly [number, number]>, width: number, h: number): Shape => (x, z) =>
   h * Math.exp(-(polyDist(x, z, pts) ** 2) / (2 * width * width));
 
-/** 1 inside the polygon-ish region described by a predicate, softened at the edge. */
-export const region = (inside: (x: number, z: number) => number): Shape => inside;
-
 export const sum = (...shapes: Shape[]): Shape => (x, z) => shapes.reduce((a, f) => a + f(x, z), 0);

@@ -69,6 +69,13 @@ export class HeightField {
     this.version++;
   }
 
+  /** Copy heights and bedrock from another field (used for stable picking during a stroke). */
+  copyFrom(other: HeightField): void {
+    this.h.set(other.h);
+    this.rock.set(other.rock);
+    this.version++;
+  }
+
   private at(i: number, j: number): number {
     i = i < 0 ? 0 : i > N - 1 ? N - 1 : i;
     j = j < 0 ? 0 : j > N - 1 ? N - 1 : j;
