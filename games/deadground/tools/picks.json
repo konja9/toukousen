@@ -1,0 +1,10 @@
+[
+  {"seed": 6, "variant": 0, "controls": 4, "sweepTowers": 0, "spinTowers": 0, "patrols": 0, "name": "FIRST SHEET", "nameJa": "はじめの図葉", "brief": "見張りはいない。地図と方位を頼りに、番号順に旗を回ろう。"},
+  {"seed": 21, "variant": 1, "controls": 4, "sweepTowers": 1, "spinTowers": 0, "patrols": 0, "name": "WATCHTOWER", "nameJa": "見張り塔", "brief": "塔の光は左右に首を振る。尾根の陰を選んで進もう。"},
+  {"seed": 17, "variant": 1, "controls": 5, "sweepTowers": 0, "spinTowers": 1, "patrols": 0, "name": "LIGHTHOUSE", "nameJa": "回る光", "brief": "光がぐるりと回る。通り過ぎた光の後ろを追いかけよう。"},
+  {"seed": 7, "variant": 0, "controls": 5, "sweepTowers": 1, "spinTowers": 1, "patrols": 0, "name": "CROSSFIRE", "nameJa": "挟み撃ち", "brief": "二つの塔。どちらの光も届かない谷を地図で探そう。"},
+  {"seed": 23, "variant": 0, "controls": 5, "sweepTowers": 1, "spinTowers": 0, "patrols": 1, "name": "PATROL", "nameJa": "巡回", "brief": "見張りが丘を巡る。背中を向けたすきに抜けよう。"},
+  {"seed": 10, "variant": 1, "controls": 6, "sweepTowers": 1, "spinTowers": 1, "patrols": 1, "name": "NIGHT EXERCISE", "nameJa": "夜間演習", "brief": "塔と巡回が同時に動く。走る前に地図で死角をつなごう。"},
+  {"seed": 1, "variant": 1, "controls": 6, "sweepTowers": 2, "spinTowers": 0, "patrols": 2, "name": "VALLEY RUN", "nameJa": "谷筋", "brief": "二人の巡回と二つの塔。谷筋が抜け道になる。"},
+  {"seed": 25, "variant": 1, "controls": 6, "sweepTowers": 2, "spinTowers": 1, "patrols": 1, "name": "FINAL SURVEY", "nameJa": "測量完了", "brief": "すべての見張りの隙を縫って、フィニッシュへ。"}
+]

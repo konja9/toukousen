@@ -1,0 +1,25 @@
+{
+  "name": "toukousen-deadground",
+  "private": true,
+  "version": "0.1.0",
+  "description": "DEAD GROUND — 等高線の地図を読み、見張りの死角を走るステルス・オリエンテーリング",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "freeze": "AUTHORING=1 vitest run tools/freeze.test.ts --silent=false"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "@types/three": "^0.186.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  }
+}
