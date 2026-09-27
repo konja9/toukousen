@@ -1,0 +1,24 @@
+{
+  "name": "toukousen",
+  "private": true,
+  "version": "0.1.0",
+  "description": "CONTOUR GLIDE — 等高線だけで描かれた地形を滑空する Three.js ゲーム",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "@types/three": "^0.186.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  }
+}
