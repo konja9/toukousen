@@ -1,0 +1,109 @@
+[
+  {
+    "id": "glide",
+    "no": 1,
+    "dir": "games/glide",
+    "title": "CONTOUR GLIDE",
+    "ja": "滑空",
+    "genre": "FLIGHT · SCORE ATTACK",
+    "genreJa": "飛行スコアアタック",
+    "tagline": "線を読め。低く飛べ。遠くへ。",
+    "desc": "等高線だけで描かれた果てしない地形を、グライダーで滑空する。地面すれすれを飛ぶほど得点が伸びる。",
+    "controls": "キーボード",
+    "record": {
+      "type": "score",
+      "key": "toukousen:best"
+    },
+    "added": "2026-09-27",
+    "shot": "glide.jpg",
+    "shoot": [
+      "Space",
+      9000
+    ]
+  },
+  {
+    "id": "sculpt",
+    "no": 2,
+    "dir": "games/sculpt",
+    "title": "SCULPT",
+    "ja": "造形",
+    "genre": "PUZZLE",
+    "genreJa": "地形パズル",
+    "tagline": "盛って、削って、転がす。",
+    "desc": "地形模型を盛って削って斜面をつくり、球をゴールの穴へ転がす。土の量は増えも減りもしない。全 10 図葉。",
+    "controls": "マウス＋キーボード",
+    "record": {
+      "type": "stages",
+      "key": "toukousen-sculpt:best",
+      "total": 10
+    },
+    "added": "2026-09-27",
+    "shot": "sculpt.jpg",
+    "shoot": [
+      "Digit4",
+      5500,
+      "Space",
+      1800
+    ]
+  },
+  {
+    "id": "deadground",
+    "no": 3,
+    "dir": "games/deadground",
+    "title": "DEAD GROUND",
+    "ja": "死角",
+    "genre": "STEALTH · ORIENTEERING",
+    "genreJa": "ステルス × 読図",
+    "tagline": "見られずに、読んで、走れ。",
+    "desc": "地図で見張りの死角をつなぎ、番号順にコントロールを回る。探照灯の光に入れば見つかる。全 8 図葉。",
+    "controls": "マウス＋キーボード",
+    "record": {
+      "type": "sheets",
+      "key": "toukousen-deadground:best",
+      "total": 8
+    },
+    "added": "2026-09-27",
+    "shot": "deadground.jpg",
+    "shoot": [
+      "Space",
+      2500,
+      "Digit5",
+      4500
+    ]
+  },
+  {
+    "id": "sounding",
+    "no": 4,
+    "dir": "games/sounding",
+    "title": "SOUNDING",
+    "ja": "測深",
+    "genre": "SONAR ROGUELIKE",
+    "genreJa": "潜航ローグライク",
+    "tagline": "音で測れ。聞かれる前に。",
+    "desc": "真っ暗な海をソナーで測りながら潜る。音を出せば相手にも聞かれる。区画ごとに改装を選び、どこまで深く行けるか。",
+    "controls": "キーボード＋マウス",
+    "record": {
+      "type": "dive",
+      "key": "toukousen-sounding:best"
+    },
+    "added": "2026-09-28",
+    "shot": "sounding.jpg",
+    "shoot": [
+      {
+        "until": "window.__game.stateTime > 1.5"
+      },
+      "Space",
+      {
+        "until": "window.__game.state === 'dive' && window.__game.world.t > 2"
+      },
+      "KeyW",
+      {
+        "until": "window.__game.world.t > 4"
+      },
+      "Space",
+      {
+        "until": "window.__game.world.pings.length > 0 && window.__game.world.t > window.__game.world.pings[0].ping.t0 + 1.1"
+      }
+    ]
+  }
+]

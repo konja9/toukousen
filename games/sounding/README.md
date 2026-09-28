@@ -5,7 +5,7 @@ Three.js 製。モノクロ。
 
 > 音で測れ。聞かれる前に。
 
-第 1 作（フライトゲーム CONTOUR GLIDE）はリポジトリのルート、第 2 作（地形パズル SCULPT）は `games/sculpt/`、第 3 作（ステルス・オリエンテーリング DEAD GROUND）は `games/deadground/` にあり、このディレクトリとは独立しています。
+第 1 作（フライトゲーム CONTOUR GLIDE）は `games/glide/`、第 2 作（地形パズル SCULPT）は `games/sculpt/`、第 3 作（ステルス・オリエンテーリング DEAD GROUND）は `games/deadground/` にあり、このディレクトリとは独立しています。
 
 ## 遊び方
 

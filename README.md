@@ -1,69 +1,41 @@
-# 等高線 — CONTOUR GLIDE
+# 等高線 — TOUKOUSEN
 
-等高線だけで描かれた無限の地形を、グライダーで滑空するスコアアタック。
-Three.js 製。モノクロ。
+等高線だけで描く、小さなゲームの連作。Three.js 製。モノクロ。
 
-> 線を読め。低く飛べ。遠くへ。
+**作品索引（全作品をまとめて遊べるページ）**: https://claude.ai/artifact/Nn4DbEURDkk516CrBpSuvJ
 
-## 遊び方
+## 作品
 
-- 地形は等高線（10 m 間隔、50 m ごとに太い計曲線）だけで描かれています。
-- **白く光る線は、いまの自機と同じ高さの等高線**です。その内側の斜線で塗られた地形は自分より高い＝ぶつかる場所。線を読んで飛ぶコースを決めます。
-- **地面に近いほどスコア倍率が上がります**（対地高度 30 m 未満で ×2、16 m 未満で ×3、8 m 未満で ×4）。
-- 谷に沿って浮かぶ**リング（ゲート）**を抜けると加点と加速。連続で抜けると CHAIN が伸び、ボーナスが増えます。外すと CHAIN はリセット。
-- 立ちのぼる**同心円の柱は上昇気流（サーマル）**。中に入ると高度を回復できます。
-- 物理はエネルギー交換型です。降下すると加速し、上昇すると減速します。遅くなりすぎると失速して機首が下がります。
-- 進むほど山は高く、谷は狭く、谷底は荒れていきます。地図（SHEET 番号）は毎回変わり、同じ番号なら同じ地形です。
+| # | 作品 | ジャンル | ディレクトリ | 単体の公開ページ |
+| --- | --- | --- | --- | --- |
+| 01 | CONTOUR GLIDE | 飛行スコアアタック | [`games/glide/`](games/glide/) | https://claude.ai/artifact/DNJad1a97ViuyQzHdwS4Mc |
+| 02 | SCULPT | 地形パズル | [`games/sculpt/`](games/sculpt/) | https://claude.ai/artifact/3opFczsGwckZsANPEnaEjZ |
+| 03 | DEAD GROUND | ステルス × 読図 | [`games/deadground/`](games/deadground/) | https://claude.ai/artifact/2gxncYo9D3Z4K46EnHtRbL |
+| 04 | SOUNDING | 潜航ローグライク | [`games/sounding/`](games/sounding/) | https://claude.ai/artifact/SENdDrEUTA2E766rw9xfvz |
 
-### 操作（PC / キーボード）
-
-| キー | 動作 |
-| --- | --- |
-| `W` `S` / `↑` `↓` | 上昇 / 降下（`Y` で上下反転） |
-| `A` `D` / `←` `→` | 旋回（バンク） |
-| `Shift` | エアブレーキ |
-| `Space` / クリック | 開始（クリックはタイトル画面のみ） / 結果画面から新しい地図へ |
-| `R` | 同じ地図で再挑戦 |
-| `Esc` / `P` | ポーズ |
-| `Q` | タイトルへ（ポーズ中・結果画面） |
-| `M` | サウンド ON/OFF |
-| `T` | 白黒反転（夜 / 紙の地形図） |
-
-タイトル画面では、マウスを地図の上に置くとその地点の標高が表示されます。
-
-## 起動
+各作品は独立したプロジェクトです。遊び方と仕組みは、それぞれの README にあります。
 
 ```bash
+cd games/<name>
 npm install
-npm run dev        # http://localhost:5173
-npm run build      # dist/ に静的ファイルを出力（base: './' なので任意の場所に置ける）
-npm run preview    # ビルド結果の確認
-npm test           # ユニットテスト + バランステスト
-npm run typecheck
+npm run dev        # 開発サーバ
+npm test           # テスト
+npm run build      # dist/ に静的ファイル
 ```
 
-WebGL2 対応ブラウザが必要です。
+## 作品索引（ハブ）
 
-## 仕組み
+`hub/` は、全作品を 1 ページにまとめる作品索引です。新しい作品を加える手順は [`hub/README.md`](hub/README.md) にあります。
 
-- **高さ関数の二重実装** — 地形の高さ `h(x, z)` は GLSL（`src/world/shaders/height.glsl`）と TypeScript（`src/world/terrainField.ts`）の両方に同じ式で実装しています。描画は GPU、衝突判定・ゲート配置・レーダーは CPU。2D simplex noise のハッシュ計算は `Math.fround` で float32 に揃えてあり、`?selftest` を付けて開くと GPU と CPU の高さを 16,384 点で比較します（誤差 0.07 m 程度）。
-- **等高線シェーダ** — フラグメントシェーダでピクセルごとに高さを再計算し、`fract(h / 10)` と `fwidth` でアンチエイリアスされた一定幅の線を描きます。線が密になりすぎる所はフェードしてモアレを防止。自機高度の線と、それより高い領域の斜線もここで描きます（`src/world/shaders/contour.glsl`）。
-- **3D と 2D** — 飛行中はプレイヤー中心の変位メッシュ（中心ほど頂点が密）、タイトル・レーダー・結果画面の地図は同じ関数を使う全画面クアッドで描画しています。面は背景色で塗って奥の線を隠す、いわゆる隠線処理の見た目です。
-- **調整値** — 地形・物理・スコアの定数は `src/config.ts` に集約。地形の定数は GLSL に `#define` として注入されるので、ここを変えれば GPU と CPU の両方に反映されます。
-- **バランステスト** — `tests/balance.test.ts` の簡易オートパイロットが複数の地図で数 km 飛べることを確認し、調整で「クリア不能な地形」になっていないかを検出します。
+```bash
+node hub/build.mjs   # 全作品をビルドして hub/dist にまとめる
+```
 
 ## 構成
 
 ```
-src/
-  config.ts              調整値（地形・物理・スコア）
-  main.ts                エントリ
-  game/                  状態機械（タイトル → 降下 → 飛行 → 墜落 → 結果）とスコア
-  world/                 高さ関数、地形メッシュ、2D 地図、サーマル、ゲート、GLSL
-  player/                グライダーの物理と線画モデル
-  camera/                俯瞰 ⇄ 追従カメラの補間
-  ui/                    HUD（Canvas 2D）、DOM 画面、CSS
-  core/                  入力、WebAudio 合成音、保存、イージング
-  debug/selftest.ts      GPU / CPU 高さ一致テスト（?selftest）
-tests/                   vitest
+README.md      このファイル
+CLAUDE.md      作業の約束ごと（新作の追加手順など）
+hub/           作品索引
+games/         作品（1 作 = 1 ディレクトリ）
 ```

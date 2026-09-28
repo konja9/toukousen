@@ -5,7 +5,7 @@ Three.js 製。モノクロ。
 
 > 見られずに、読んで、走れ。
 
-第 1 作（フライトゲーム CONTOUR GLIDE）はリポジトリのルート、第 2 作（地形パズル SCULPT）は `games/sculpt/` にあり、このディレクトリとは独立しています。
+第 1 作（フライトゲーム CONTOUR GLIDE）は `games/glide/`、第 2 作（地形パズル SCULPT）は `games/sculpt/` にあり、このディレクトリとは独立しています。
 
 ## 遊び方
 

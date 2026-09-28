@@ -1,0 +1,61 @@
+<title>等高線 作品索引</title>
+<meta name="description" content="等高線だけで描く小さなゲームの連作。ここからすべての作品を遊べます。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<style>
+/*STYLE*/
+</style>
+
+<header class="hero" id="top">
+  <canvas class="field" id="field" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <div class="titleblock">
+      <p class="eyebrow">TOUKOUSEN · INDEX TO SHEETS</p>
+      <h1><span class="jp">等高線</span><span class="en">TOUKOUSEN</span></h1>
+      <p class="lede">等高線だけで描く、小さなゲームの連作。<br />一作ごとに一枚の図葉として、ここに綴じていきます。</p>
+    </div>
+    <dl class="legend" aria-label="凡例">
+      <div><dt>図葉</dt><dd><span id="count">00</span> 枚</dd></div>
+      <div><dt>最新</dt><dd id="latest">—</dd></div>
+      <div><dt>対象</dt><dd>PC（キーボード・マウス）</dd></div>
+    </dl>
+  </div>
+  <div class="mapnotes" aria-hidden="true">
+    <span class="scale"><i></i>100 m</span>
+    <span>主曲線 10 m · 計曲線 50 m</span>
+    <span class="north">N ↑</span>
+  </div>
+</header>
+
+<main class="index" id="index">
+  <div class="index-head">
+    <h2>作品索引 <small>SHEETS</small></h2>
+    <p>番号は発表順です。<b>PLAY</b> を押すと、このページの中で全画面で遊べます。記録はこのページで遊んだ分が表示されます。</p>
+  </div>
+  <ol class="sheets" id="sheets"></ol>
+  <div class="next" aria-label="次の図葉">
+    <span class="next-no">SHEET <span id="nextno">05</span></span>
+    <span class="next-text">次の図葉は準備中です。新しい作品はこの索引に追加されます。</span>
+  </div>
+</main>
+
+<footer class="foot">
+  <span>等高線 TOUKOUSEN</span>
+  <span>Three.js · モノクロ · 音はすべて WebAudio の合成</span>
+</footer>
+
+<div class="player" id="player" hidden>
+  <div class="bar">
+    <span class="now" id="now">SHEET 00</span>
+    <span class="hint">ゲームの中の Esc は一時停止です</span>
+    <button type="button" id="fs">全画面</button>
+    <button type="button" id="close">× 索引へ戻る</button>
+  </div>
+  <iframe id="frame" title="ゲーム" allow="fullscreen; autoplay"></iframe>
+</div>
+
+<script type="application/json" id="games">/*GAMES*/</script>
+<script>
+/*SCRIPT*/
+</script>
