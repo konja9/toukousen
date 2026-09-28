@@ -1,0 +1,24 @@
+{
+  "name": "toukousen-sounding",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SOUNDING — 音で海底を測り、聞かれる前に深く潜る潜航ローグライク",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "@types/three": "^0.186.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  }
+}
