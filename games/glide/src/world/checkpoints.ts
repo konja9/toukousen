@@ -9,9 +9,11 @@ import type { TerrainField } from './terrainField';
  * drawn. Crossing is decided by the run clock (by progress); this only shows it.
  */
 
-const LEVEL_STEP = 8;
-const LEVELS = 30;
+const LEVEL_STEP = 10;
+const LEVELS = 24;
 const SAMPLE = 5;
+/** Dashes: this many samples drawn, then one left out (sets the curtain apart from the terrain's contours). */
+const DASH = 3;
 
 const vertexShader = /* glsl */ `
 attribute float aLevel;
@@ -22,7 +24,9 @@ void main() {
   float k = aLevel / ${LEVELS.toFixed(1)};
   // a brighter band climbing the curtain
   float scan = exp(-pow(fract(k - uTime * 0.35) * 7.0 - 0.5, 2.0));
-  vAlpha = pow(1.0 - k, 1.3) * (0.55 + 0.45 * scan);
+  // every fifth level is an index line, like the terrain's
+  float index = mod(aLevel, 5.0) < 0.5 ? 1.0 : 0.6;
+  vAlpha = pow(1.0 - k, 1.1) * index * (0.55 + 0.45 * scan);
   vWorld = (modelMatrix * vec4(position, 1.0)).xyz;
   gl_Position = projectionMatrix * viewMatrix * vec4(vWorld, 1.0);
 }
@@ -82,6 +86,7 @@ export class Checkpoints {
     for (let l = 0; l < LEVELS; l++) {
       const y = floor + 3 + l * LEVEL_STEP;
       for (let i = 0; i < n; i++) {
+        if (i % (DASH + 1) === DASH) continue;
         if (ground[i] > y - 0.5 || ground[i + 1] > y - 0.5) continue;
         pos.push(cx - span + i * SAMPLE, y, z, cx - span + (i + 1) * SAMPLE, y, z);
         lvl.push(l, l);
@@ -103,7 +108,7 @@ export class Checkpoints {
         uInk: shared.uInk,
         uFogDist: shared.uFogDist,
         uTime: shared.uTime,
-        uOpacity: { value: 0.6 },
+        uOpacity: { value: 0.75 },
       },
     });
     const obj = new LineSegments(this.build(index), mat);
@@ -129,7 +134,7 @@ export class Checkpoints {
       }
       c.age += dt;
       // a flash when crossed, then gone
-      c.obj.material.uniforms.uOpacity.value = c.passed ? 1.8 * Math.max(0, 1 - c.age / 1.4) : 0.6;
+      c.obj.material.uniforms.uOpacity.value = c.passed ? 1.8 * Math.max(0, 1 - c.age / 1.4) : 0.75;
     }
     for (let i = this.items.length - 1; i >= 0; i--) {
       const c = this.items[i];

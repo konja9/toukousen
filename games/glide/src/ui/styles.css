@@ -443,6 +443,10 @@ kbd {
   margin-top: 20px;
 }
 
+.splits .head {
+  justify-content: flex-start;
+}
+
 .splits .head small {
   font-family: var(--jp);
   letter-spacing: 0.08em;
@@ -480,21 +484,6 @@ kbd {
   margin-right: 10px;
   border: 1px solid var(--ink-2);
   color: var(--ink);
-}
-
-@media (max-height: 820px) {
-  .result dt,
-  .result dd {
-    padding: 6px 0;
-  }
-
-  .result dl {
-    margin-top: 18px;
-  }
-
-  .result .score {
-    font-size: clamp(44px, 5vw, 64px);
-  }
 }
 
 /* pause */
@@ -662,4 +651,44 @@ kbd {
   font-size: 14px;
   line-height: 2;
   color: var(--ink-2);
+}
+
+/* short screens: keep the whole flight log in view */
+@media (max-height: 860px) {
+  .result .score {
+    margin: 10px 0 2px;
+    font-size: clamp(44px, 5vw, 60px);
+  }
+
+  .result .newbest {
+    margin-top: 6px;
+  }
+
+  .result dl {
+    margin-top: 14px;
+  }
+
+  .result dt,
+  .result dd {
+    padding: 5px 0;
+  }
+
+  .result .missions {
+    margin-top: 14px;
+  }
+
+  .result .missions li {
+    padding: 4px 0;
+  }
+
+  .result .splits {
+    margin-top: 12px;
+  }
+
+  .result .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin-top: 20px;
+  }
 }

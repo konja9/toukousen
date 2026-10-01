@@ -633,7 +633,7 @@ export class Game {
     this.rig.chasePose(g, f, realDt, this.pose);
     this.rig.apply(this.pose, realDt);
     const wind = this.wind.at(g.z);
-    this.airflow.update(this.rig.camera.position, wind.x, wind.z, this.state === 'intro' ? introT * 0.8 : 0.8);
+    this.airflow.update(this.rig.camera.position, wind.x, wind.z, this.state === 'intro' ? introT : 1);
 
     const lowness = clamp01((30 - agl) / 30);
     this.audio.flight(this.state === 'intro' ? g.speed * introT : g.speed, lowness, this.lift, live ? this.air : 0);
@@ -709,7 +709,7 @@ export class Game {
       if (!this.rig.blending) this.enterResult();
     }
     const wind = this.wind.at(this.crashPos.z);
-    this.airflow.update(this.rig.camera.position, wind.x, wind.z, Math.max(0, 0.8 - t * 0.5));
+    this.airflow.update(this.rig.camera.position, wind.x, wind.z, Math.max(0, 1 - t * 0.6));
   }
 
   private updateResult(dt: number): void {

@@ -38,11 +38,11 @@ void main() {
   float speed = length(flow);
   vec3 dir = speed > 1e-3 ? flow / speed : vec3(0.0, 1.0, 0.0);
   float life = fract(uTime / ${LIFE.toFixed(1)} + aSeed);
-  float len = 3.0 + speed * 0.9;
+  float len = 4.0 + speed * 1.2;
   vec3 wp = base + dir * (life * ${LIFE.toFixed(1)} * speed + len * aEnd);
   vec2 off = abs(xz - uCam.xz);
   float edge = 1.0 - smoothstep(box * 0.3, box * 0.48, max(off.x, off.y));
-  float strength = 0.3 + 0.7 * smoothstep(0.4, 4.0, abs(w));
+  float strength = 0.5 + 0.5 * smoothstep(0.4, 4.0, abs(w));
   vAlpha = edge * strength * sin(life * 3.14159) * aEnd * smoothstep(0.5, 3.0, U);
   vWorld = wp;
   gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
