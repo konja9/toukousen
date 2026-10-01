@@ -8,17 +8,20 @@
     "genre": "FLIGHT · SCORE ATTACK",
     "genreJa": "飛行スコアアタック",
     "tagline": "線を読め。低く飛べ。遠くへ。",
-    "desc": "等高線だけで描かれた果てしない地形を、グライダーで滑空する。地面すれすれを飛ぶほど得点が伸びる。",
+    "desc": "等高線だけの地形を滑空し、2 km ごとのチェックポイントで時間をつなぐ。尾根の上昇風を拾い、図葉ごとの課題でメダルを集める。",
     "controls": "キーボード",
     "record": {
-      "type": "score",
-      "key": "toukousen:best"
+      "type": "glide",
+      "key": "toukousen:best",
+      "medals": "toukousen:medals"
     },
     "added": "2026-09-27",
     "shot": "glide.jpg",
     "shoot": [
       "Space",
-      9000
+      {
+        "until": "window.__game.state === 'play' && window.__game.stateTime > 4"
+      }
     ]
   },
   {

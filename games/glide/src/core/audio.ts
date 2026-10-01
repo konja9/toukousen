@@ -1,6 +1,7 @@
 /**
  * Minimal synthesized sound (no assets): wind that follows airspeed, a shimmer
- * inside thermals, pings for gates, a warning tick and an impact.
+ * inside thermals, a variometer for rising and sinking air, pings for gates and
+ * checkpoints, the clock's last seconds, a near-miss whoosh and an impact.
  */
 export class Audio {
   private ctx: AudioContext | null = null;
@@ -10,8 +11,10 @@ export class Audio {
   private rushGain!: GainNode;
   private shimmerGain!: GainNode;
   private noise!: AudioBuffer;
+  private sinkGain!: GainNode;
   private muted = false;
   private lastTick = 0;
+  private nextBeep = 0;
 
   get isMuted(): boolean {
     return this.muted;
@@ -82,6 +85,21 @@ export class Audio {
       o.start();
     }
     trem.connect(this.shimmerGain).connect(this.master);
+
+    // Variometer sink tone: a low, slightly buzzing hum that swells in sinking air.
+    this.sinkGain = ctx.createGain();
+    this.sinkGain.gain.value = 0;
+    const sinkFilter = ctx.createBiquadFilter();
+    sinkFilter.type = 'lowpass';
+    sinkFilter.frequency.value = 600;
+    for (const f of [196, 197.5]) {
+      const o = ctx.createOscillator();
+      o.type = 'sawtooth';
+      o.frequency.value = f;
+      o.connect(sinkFilter);
+      o.start();
+    }
+    sinkFilter.connect(this.sinkGain).connect(this.master);
   }
 
   setMuted(m: boolean): void {
@@ -97,8 +115,11 @@ export class Audio {
     void this.ctx?.resume();
   }
 
-  /** Continuous parameters, called every frame while flying (or with zeros to fade out). */
-  flight(speed: number, lowness: number, lift: number): void {
+  /**
+   * Continuous parameters, called every frame while flying (or with zeros to fade out).
+   * `air` is the vertical speed of the air mass (thermals + ridge lift) for the variometer.
+   */
+  flight(speed: number, lowness: number, lift: number, air = 0): void {
     const ctx = this.ctx;
     if (!ctx) return;
     const t = ctx.currentTime;
@@ -107,6 +128,22 @@ export class Audio {
     this.windGain.gain.setTargetAtTime(speed > 0 ? 0.05 + s * 0.22 : 0, t, 0.15);
     this.rushGain.gain.setTargetAtTime(lowness * 0.12 * (0.4 + s), t, 0.1);
     this.shimmerGain.gain.setTargetAtTime(Math.min(lift / 15, 1) * 0.035, t, 0.2);
+    this.vario(speed > 0 ? air : 0);
+  }
+
+  /** Beeps that get higher and quicker in rising air; a low hum in sinking air. */
+  private vario(air: number): void {
+    const ctx = this.ctx!;
+    const t = ctx.currentTime;
+    this.sinkGain.gain.setTargetAtTime(air < -1.2 ? Math.min((-air - 1.2) / 4, 1) * 0.03 : 0, t, 0.15);
+    if (air < 0.5) {
+      this.nextBeep = Math.min(this.nextBeep, t + 0.05);
+      return;
+    }
+    if (t < this.nextBeep) return;
+    const period = Math.max(0.11, 0.42 - air * 0.035);
+    this.tone(560 + Math.min(air, 12) * 70, period * 0.55, 0.035, 'triangle');
+    this.nextBeep = t + period;
   }
 
   private tone(freq: number, dur: number, gain: number, type: OscillatorType = 'sine', delay = 0): void {
@@ -140,6 +177,50 @@ export class Audio {
     if (!ctx || ctx.currentTime - this.lastTick < 0.22) return;
     this.lastTick = ctx.currentTime;
     this.tone(1320, 0.06, 0.05, 'square');
+  }
+
+  /** Crossing a checkpoint: a rising pair. */
+  checkpoint(): void {
+    this.tone(1046.5, 0.5, 0.12);
+    this.tone(1568, 0.7, 0.1, 'sine', 0.09);
+    this.tone(2093, 0.6, 0.04, 'sine', 0.18);
+  }
+
+  /** One of the clock's last seconds. */
+  tick(seconds: number): void {
+    this.tone(seconds <= 3 ? 1975 : 1480, 0.07, 0.07, 'square');
+  }
+
+  timeUp(): void {
+    [880, 659.25, 440, 329.6].forEach((f, i) => this.tone(f, 0.45, 0.1, 'triangle', i * 0.13));
+  }
+
+  /** A mission completed: a bright major arpeggio. */
+  mission(): void {
+    [1046.5, 1318.5, 1568, 2093].forEach((f, i) => this.tone(f, 0.6, 0.07, 'sine', i * 0.07));
+  }
+
+  /** Air rushing past terrain on one side (-1 left, 1 right). */
+  nearMiss(side: number): void {
+    const ctx = this.ctx;
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    const src = ctx.createBufferSource();
+    src.buffer = this.noise;
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.Q.value = 2;
+    bp.frequency.setValueAtTime(2600, t);
+    bp.frequency.exponentialRampToValueAtTime(500, t + 0.45);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.32, t + 0.03);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+    const pan = ctx.createStereoPanner();
+    pan.pan.value = side * 0.8;
+    src.connect(bp).connect(g).connect(pan).connect(this.master);
+    src.start(t, Math.random());
+    src.stop(t + 0.55);
   }
 
   ui(): void {

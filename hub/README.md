@@ -42,7 +42,7 @@ hub/
    - `id`、`no`（通し番号）、`dir`
    - `title`、`ja`、`genre`、`genreJa`、`tagline`、`desc`、`controls`
    - `record`、`added`、`shot`、`shoot`（省略可）
-3. 記録の表示：`record.type` は既存の `score` / `stages` / `sheets` / `dive` から選びます。どれにも合わなければ、`hub/src/hub.js` の `formats` に表示関数を 1 つ足します。
+3. 記録の表示：`record.type` は既存の `score` / `stages` / `sheets` / `dive` / `glide` から選びます。どれにも合わなければ、`hub/src/hub.js` の `formats` に表示関数を 1 つ足します。
 4. スクリーンショットを撮ります：`cd games/<id> && npm run build`、続けて `node hub/tools/shoot.cjs <id>`。
    - `shoot` の手順（キー・待ち時間・条件）でプレイ中の場面を撮れます。
    - ソフトウェア描画ではゲーム内の時間が遅く進むので、待ち時間を固定するより `{ "until": "式" }` で条件を待つ方が確実です。

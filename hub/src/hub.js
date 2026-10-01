@@ -32,6 +32,15 @@
       }
       return done.size ? `${done.size} / ${g.record.total} 図葉クリア · UNSEEN ${unseen.size}` : null;
     },
+    glide: (v, g) => {
+      const parts = [];
+      if (typeof v === 'number' && v > 0) parts.push(`ベスト ${Math.round(v).toLocaleString('ja-JP')} 点`);
+      const m = read(g.record.medals);
+      let n = 0;
+      if (m && typeof m === 'object') for (const b of Object.values(m)) for (let i = 0; i < 3; i++) if (b & (1 << i)) n++;
+      if (n) parts.push(`メダル ◆ ${n}`);
+      return parts.length ? parts.join(' · ') : null;
+    },
     dive: (v) => (v && typeof v === 'object' && typeof v.sectors === 'number' ? `${v.sectors} 区画通過 · 最大深度 ${Math.round(v.depth)} m` : null),
   };
   const recordText = (g) => {

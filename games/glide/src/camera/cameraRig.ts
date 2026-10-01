@@ -39,6 +39,10 @@ export class CameraRig {
   private readonly chasePos = new Vector3();
   private chaseInit = false;
   private shake = 0;
+  /** Extra field of view that springs back (gate boost). */
+  private kickFov = 0;
+  /** Short shake that dies away (near miss). */
+  private jolt = 0;
 
   constructor(aspect: number) {
     this.camera = new PerspectiveCamera(60, aspect, 0.5, 6000);
@@ -69,6 +73,16 @@ export class CameraRig {
     this.shake = amount;
   }
 
+  /** Widen the view for a moment. */
+  kick(degrees: number): void {
+    this.kickFov = Math.max(this.kickFov, degrees);
+  }
+
+  /** A short shake on top of the steady one. */
+  impulse(amount: number): void {
+    this.jolt = Math.max(this.jolt, amount);
+  }
+
   /** Third-person chase pose behind the glider. */
   chasePose(g: Glider, field: TerrainField, dt: number, out: Pose): Pose {
     const fx = Math.sin(g.yaw);
@@ -84,15 +98,18 @@ export class CameraRig {
     if (this.chasePos.y < ground) this.chasePos.y = ground;
 
     out.pos.copy(this.chasePos);
-    if (this.shake > 0) {
-      out.pos.x += (Math.random() - 0.5) * this.shake;
-      out.pos.y += (Math.random() - 0.5) * this.shake;
+    this.kickFov *= Math.exp(-3.5 * dt);
+    this.jolt *= Math.exp(-6 * dt);
+    const shake = this.shake + this.jolt;
+    if (shake > 0) {
+      out.pos.x += (Math.random() - 0.5) * shake;
+      out.pos.y += (Math.random() - 0.5) * shake;
     }
     const cp = Math.cos(g.pitch);
     const target = new Vector3(g.x + fx * cp * 26, g.y + Math.sin(g.pitch) * 26 + 2.2, g.z + fz * cp * 26);
     lookQuat(out.pos, target, UP, out.quat);
     out.quat.multiply(tmpQ.setFromAxisAngle(Z_AXIS, -g.bank * 0.45));
-    out.fov = 60 + Math.min(Math.max((g.speed - 40) * 0.24, 0), 20);
+    out.fov = 60 + Math.min(Math.max((g.speed - 40) * 0.24, 0), 20) + this.kickFov;
     return out;
   }
 

@@ -1,4 +1,4 @@
-import { SCORE } from '../config';
+import { NEARMISS, SCORE } from '../config';
 
 export function lowMultiplier(agl: number): number {
   for (const [maxAgl, mult] of SCORE.lowTiers) if (agl < maxAgl) return mult;
@@ -19,6 +19,7 @@ export class ScoreKeeper {
   maxSpeed = 0;
   time = 0;
   lastGateBonus = 0;
+  nearMisses = 0;
 
   update(dt: number, progress: number, agl: number, speed: number): void {
     this.time += dt;
@@ -45,5 +46,13 @@ export class ScoreKeeper {
     this.lastGateBonus = SCORE.gateBase * this.chain;
     this.score += this.lastGateBonus;
     return this.lastGateBonus;
+  }
+
+  /** A near miss at the current multiplier; returns the points awarded. */
+  nearMiss(): number {
+    this.nearMisses++;
+    const pts = NEARMISS.points * this.mult;
+    this.score += pts;
+    return pts;
   }
 }

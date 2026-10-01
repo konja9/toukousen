@@ -1,4 +1,4 @@
-import { TERRAIN as T } from '../config';
+import { TERRAIN as T, WIND as W } from '../config';
 import noise from './shaders/noise.glsl?raw';
 import height from './shaders/height.glsl?raw';
 import contour from './shaders/contour.glsl?raw';
@@ -45,3 +45,22 @@ export const HEIGHT_GLSL = `${DEFINES}\n${noise}\n${height}`;
 
 /** `contourInk()`, `applyReveal()` and the shared palette uniforms. */
 export const CONTOUR_GLSL = contour;
+
+/**
+ * `float ridgeLift(vec3 p, vec2 wind)`: the vertical air speed of the ridge
+ * lift at p, the GPU twin of `ridgeLift()` in wind.ts. Requires HEIGHT_GLSL.
+ */
+export const WIND_GLSL = /* glsl */ `
+float ridgeLift(vec3 p, vec2 wind) {
+  float U = length(wind);
+  if (U < 1e-3) return 0.0;
+  vec2 d = wind / U;
+  const float e = ${f(W.slopeStep)};
+  float gx = (terrainHeight(p.xz + vec2(e, 0.0)) - terrainHeight(p.xz - vec2(e, 0.0))) / (2.0 * e);
+  float gz = (terrainHeight(p.xz + vec2(0.0, e)) - terrainHeight(p.xz - vec2(0.0, e))) / (2.0 * e);
+  float s = clamp(gx * d.x + gz * d.y, -${f(W.maxSlope)}, ${f(W.maxSlope)});
+  float agl = max(0.0, p.y - terrainHeight(p.xz));
+  float fade = exp(-agl / ${f(W.decay)});
+  return (s > 0.0 ? ${f(W.liftGain)} : ${f(W.sinkGain)}) * U * s * fade;
+}
+`;

@@ -89,3 +89,44 @@ export const SCORE = {
   ] as ReadonlyArray<readonly [number, number]>,
   gateBase: 200,
 } as const;
+
+export const WIND = {
+  /** Wind speed range (m/s); later sectors blow harder. */
+  speedMin: 6,
+  speedMax: 13,
+  /** Largest deviation of the wind from straight across the valley (rad). */
+  jitter: (35 * Math.PI) / 180,
+  /** Ridge lift fades with height above ground over this many meters. */
+  decay: 45,
+  /** Fraction of (wind x slope) that becomes lift on the windward side / sink on the lee side. */
+  liftGain: 0.9,
+  sinkGain: 0.55,
+  /** Steepest slope (rise/run) that still adds lift. */
+  maxSlope: 1.6,
+  /** Sampling distance for the slope (m). */
+  slopeStep: 4,
+  /** The wind turns over this many meters after a checkpoint. */
+  blend: 200,
+} as const;
+
+export const RUN = {
+  /** Distance between checkpoints (m). */
+  sectorLength: 2000,
+  /** Time on the clock at the start (s). */
+  startTime: 45,
+  /** Time added at each checkpoint, easing from bonus0 to bonus1 as the course gets harder (s). */
+  bonus0: 35,
+  bonus1: 28,
+  /** Below this many seconds the clock blinks and ticks. */
+  warnTime: 10,
+} as const;
+
+export const NEARMISS = {
+  /** Sideways probe distances (m): terrain at our height this close counts. */
+  probes: [3.5, 7] as ReadonlyArray<number>,
+  /** Terrain within this much below our altitude still counts as a wall. */
+  slack: 1.5,
+  cooldown: 1.5,
+  minSpeed: 30,
+  points: 50,
+} as const;

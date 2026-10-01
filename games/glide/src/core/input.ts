@@ -1,4 +1,4 @@
-export type Action = 'start' | 'retry' | 'pause' | 'mute' | 'theme' | 'invert' | 'title';
+export type Action = 'start' | 'retry' | 'pause' | 'mute' | 'theme' | 'invert' | 'title' | 'prev' | 'next';
 
 const PREVENT = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space']);
 
@@ -42,6 +42,13 @@ export class Input {
         return 'invert';
       case 'KeyQ':
         return 'title';
+      // these also steer; the game only takes them as actions on the title screen
+      case 'ArrowLeft':
+      case 'KeyA':
+        return 'prev';
+      case 'ArrowRight':
+      case 'KeyD':
+        return 'next';
       default:
         return null;
     }

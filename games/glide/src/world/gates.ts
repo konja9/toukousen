@@ -1,6 +1,7 @@
 import { BufferGeometry, Float32BufferAttribute, Group, LineBasicMaterial, LineLoop, LineSegments } from 'three';
-import { WORLD } from '../config';
+import { RUN, TERRAIN, WORLD } from '../config';
 import { hash01 } from '../core/rng';
+import type { Sectors } from './sectors';
 import { shared } from './uniforms';
 import type { TerrainField } from './terrainField';
 
@@ -56,29 +57,71 @@ export class Gates {
   readonly group = new Group();
   readonly list: Gate[] = [];
   private field!: TerrainField;
+  private sectors!: Sectors;
   private sheet = 0;
   private originZ = 0;
   private nextIndex = 0;
 
-  reset(field: TerrainField, sheet: number, originZ: number): void {
+  reset(field: TerrainField, sheet: number, originZ: number, sectors: Sectors): void {
     for (const g of this.list) this.disposeGate(g);
     this.list.length = 0;
     this.field = field;
+    this.sectors = sectors;
     this.sheet = sheet;
     this.originZ = originZ;
     this.nextIndex = 0;
   }
 
-  private create(index: number): Gate {
+  /**
+   * Where gate `index` goes. The sector it falls in decides the layout:
+   * along the valley center, swinging left and right, low over the floor,
+   * or out along the windward wall where the ridge lift is.
+   */
+  placement(index: number): { x: number; y: number; z: number; nx: number; nz: number } {
     const f = this.field;
-    const z = this.originZ - WORLD.gateFirst - index * WORLD.gateSpacing + (hash01(this.sheet, index, 91) - 0.5) * 80;
-    const x = f.valleyCenter(z) + (hash01(this.sheet, index, 92) - 0.5) * 40;
-    const agl = WORLD.gateAGLMin + hash01(this.sheet, index, 93) * (WORLD.gateAGLMax - WORLD.gateAGLMin);
-    const y = f.heightAt(x, z) + agl;
+    const s = this.sheet;
+    const progress = WORLD.gateFirst + index * WORLD.gateSpacing + (hash01(s, index, 91) - 0.5) * 80;
+    const z = this.originZ - progress;
+    const sector = this.sectors.info(Math.floor(progress / RUN.sectorLength));
+    const center = f.valleyCenter(z);
+    const k = f.difficulty(z);
+    const halfW = TERRAIN.halfWidth0 + (TERRAIN.halfWidth1 - TERRAIN.halfWidth0) * k;
+    const r1 = hash01(s, index, 92);
+    const r2 = hash01(s, index, 93);
+    let x = center + (r1 - 0.5) * 40;
+    let agl = WORLD.gateAGLMin + r2 * (WORLD.gateAGLMax - WORLD.gateAGLMin);
+    if (sector.pattern === 'slalom') {
+      // swing across the valley, scaled to its width so the narrow far end stays flyable
+      x = center + (index % 2 ? 1 : -1) * halfW * (0.28 + r1 * 0.14);
+      agl = 22 + r2 * 8;
+    } else if (sector.pattern === 'low') {
+      x = center + (r1 - 0.5) * 30;
+      agl = 17 + r2 * 3;
+    } else if (sector.pattern === 'ridge') {
+      // the windward wall is the one the air blows towards
+      x = center + Math.sign(sector.dirX || 1) * halfW * (0.5 + r1 * 0.2);
+      agl = 20 + r2 * 8;
+    }
     const slope = f.valleySlope(z);
     const len = Math.hypot(slope, 1);
     const nx = -slope / len;
     const nz = -1 / len;
+    // keep the ring out of the ground: every point of its lower half clears the slope
+    const r = WORLD.gateRadius;
+    const px = -nz;
+    const pz = nx;
+    let y = f.heightAt(x, z) + agl;
+    for (let i = 0; i <= 12; i++) {
+      const a = Math.PI + (i / 12) * Math.PI; // lower half, side to side
+      const side = Math.cos(a);
+      const up = Math.sin(a);
+      y = Math.max(y, f.heightAt(x + px * r * side, z + pz * r * side) + 1.5 - up * r);
+    }
+    return { x, y, z, nx, nz };
+  }
+
+  private create(index: number): Gate {
+    const { x, y, z, nx, nz } = this.placement(index);
 
     const mat = () => new LineBasicMaterial({ color: shared.uInk.value, transparent: true, fog: true });
     const ring = new LineLoop(RING_GEO, mat());

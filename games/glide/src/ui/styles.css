@@ -359,6 +359,144 @@ kbd {
   }
 }
 
+/* missions (title and result) */
+.missions {
+  margin-top: 30px;
+  max-width: 400px;
+}
+
+.missions .head,
+.splits .head {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+}
+
+.missions .medals {
+  color: var(--ink-2);
+}
+
+.missions ul {
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.missions li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--jp);
+  font-size: 12.5px;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--ink-2);
+}
+
+.missions li i {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--ink-2);
+  transform: rotate(45deg);
+}
+
+.missions li.done {
+  color: var(--ink);
+}
+
+.missions li.done i {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.missions li b {
+  margin-left: auto;
+  padding: 2px 7px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+}
+
+.missions .hint {
+  margin-top: 12px;
+  font-family: var(--jp);
+  font-size: 11.5px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+}
+
+.result .missions {
+  margin-top: 22px;
+}
+
+.result .splits {
+  margin-top: 20px;
+}
+
+.splits .head small {
+  font-family: var(--jp);
+  letter-spacing: 0.08em;
+  margin-left: 8px;
+}
+
+.splits ol {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.splits li span {
+  color: var(--ink-3);
+  margin-right: 8px;
+}
+
+.splits li em {
+  font-style: normal;
+  margin-left: 6px;
+  color: var(--ink-3);
+}
+
+.splits li em.better {
+  color: var(--ink);
+}
+
+.result .cause {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-right: 10px;
+  border: 1px solid var(--ink-2);
+  color: var(--ink);
+}
+
+@media (max-height: 820px) {
+  .result dt,
+  .result dd {
+    padding: 6px 0;
+  }
+
+  .result dl {
+    margin-top: 18px;
+  }
+
+  .result .score {
+    font-size: clamp(44px, 5vw, 64px);
+  }
+}
+
 /* pause */
 .pause {
   display: grid;
