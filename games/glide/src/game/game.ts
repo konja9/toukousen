@@ -336,6 +336,7 @@ export class Game {
       this.screens.invertFlash();
     } else {
       this.audio.timeUp();
+      this.hud.clearNotices();
     }
     this.path.push({ x: this.glider.x, z: this.glider.z });
     const final = Math.floor(this.score.score);

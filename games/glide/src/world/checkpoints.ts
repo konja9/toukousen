@@ -25,7 +25,7 @@ void main() {
   // a brighter band climbing the curtain
   float scan = exp(-pow(fract(k - uTime * 0.35) * 7.0 - 0.5, 2.0));
   // every fifth level is an index line, like the terrain's
-  float index = mod(aLevel, 5.0) < 0.5 ? 1.0 : 0.6;
+  float index = mod(aLevel, 5.0) < 0.5 ? 1.0 : 0.7;
   vAlpha = pow(1.0 - k, 1.1) * index * (0.55 + 0.45 * scan);
   vWorld = (modelMatrix * vec4(position, 1.0)).xyz;
   gl_Position = projectionMatrix * viewMatrix * vec4(vWorld, 1.0);
@@ -108,7 +108,7 @@ export class Checkpoints {
         uInk: shared.uInk,
         uFogDist: shared.uFogDist,
         uTime: shared.uTime,
-        uOpacity: { value: 0.75 },
+        uOpacity: { value: 1 },
       },
     });
     const obj = new LineSegments(this.build(index), mat);
@@ -134,7 +134,7 @@ export class Checkpoints {
       }
       c.age += dt;
       // a flash when crossed, then gone
-      c.obj.material.uniforms.uOpacity.value = c.passed ? 1.8 * Math.max(0, 1 - c.age / 1.4) : 0.75;
+      c.obj.material.uniforms.uOpacity.value = c.passed ? 1.8 * Math.max(0, 1 - c.age / 1.4) : 1;
     }
     for (let i = this.items.length - 1; i >= 0; i--) {
       const c = this.items[i];

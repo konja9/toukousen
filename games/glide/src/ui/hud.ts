@@ -305,7 +305,7 @@ export class Hud {
     this.text(clockText(c.remaining), cx, y + 12, warn ? 34 : 30, { font: SANS, weight: warn ? 300 : 200, a: a * blink, align: 'center', spacing: 1 });
     if (warn) {
       // brackets close in as the time runs out
-      const half = 92 - (10 - c.remaining) * 2;
+      const half = 100 - (10 - c.remaining) * 2.2;
       for (const s of [-1, 1]) {
         this.line(cx + s * half, y - 4, cx + s * half, y + 28, 0.9 * a * blink, 1.5);
         this.line(cx + s * half, y - 4, cx + s * (half - 7), y - 4, 0.9 * a * blink, 1.5);
